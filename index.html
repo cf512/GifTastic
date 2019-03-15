@@ -1,0 +1,133 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="utf-8">
+  <title>Vegetable GifTastic</title>
+  <style type="text/css">
+    button,
+    div,
+    form,
+    input {
+      margin: 10px;
+    }
+    .vegClass2 {float:left;}
+  </style>
+</head>
+
+<body>
+
+  <div class="container">
+    <h1>Vegetable GIF-by-Button Search</h1>
+
+    <!-- Veggies will get dumped here -->
+    <div id="buttons-view"></div>
+
+    <form id="veggie-form">
+      <label for="veggie-input">add a veggie</label>
+      <input type="text" id="veggie-input">
+      <br>
+
+      <!-- Button triggers new veggie to be added -->
+      <input id="add-veggie" type="submit" value="add a veggie">
+    </form>
+
+    <div id="veggieGifs"></div>
+
+    <!-- // ======================== JAVASCRIPT/JQUERY ======================== // -->
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+    <script type="text/javascript">
+
+      // Initial array of veggies
+      var veggies = ["Brocolli", "Tomato", "Corn", "Carrot", "Eggplant", "Kale", "Cauliflower", "Squash", "Potatoes", "Cucumbers", "Radishes", "Brussel Sprouts"];
+
+      var veggieName = "";
+
+      // Function for displaying veggie data
+      function renderButtons() {
+
+        // Delete the content inside the buttons-view div prior to adding new veggies
+        $("#buttons-view").empty();
+        // necessary to prevent repeat buttons
+
+        // Loop through the array of veggies, then generate buttons for each
+        for (i=0;i<veggies.length;i++) {
+          var veggieButton = $("<button>");
+          veggieName = veggies[i];
+          veggieButton.append(veggieName);
+          veggieButton.attr("vegID", veggies[i]);
+          veggieButton.addClass("vegClass");
+          $("#buttons-view").append(veggieButton); 
+        }
+      }
+
+    // ======================== GIPHY ACTION ======================== //
+
+    $(document.body).on("click", ".vegClass", function() {
+
+    // clears out previous set of veggies upon new button click
+    $("#veggieGifs").empty();
+
+    // the endpoint + query string
+    var vegQuery = $(this).attr("vegID");
+    var queryURL = "https://api.giphy.com/v1/gifs/search?q=" + vegQuery + "&api_key=mwhSALxtIpMT5XTbUafQaK9PZCLHTpj2&limit=10";
+    console.log(queryURL);
+
+    // the method used by jquery to query the endpoint
+    $.ajax({
+    url: queryURL,
+    method: "GET"
+    })
+
+    // the function part that collects the response
+    .then(function(response) {
+        console.log(response);
+        console.log(response.data[0].images.fixed_width_downsampled.url);
+        console.log(response.data[0].rating);
+
+    // the json that's being queried
+    for (i=0;i<10;i++){
+        var imageUrl = response.data[i].images.fixed_width_downsampled.url;
+        // var imageUrl = response.data[i].images.fixed_width_still.url;
+        // a jquery generated img tag
+        var vegRating = $("<div>").html("Rating: " + response.data[i].rating + "<br><br>");
+        var vegImage = $("<img>");
+            
+        // new src for the img tag / imageurl and new alt text for the img tag
+        vegImage.attr("src", imageUrl);
+        vegImage.attr("alt", "veggie image");
+        vegRating.append(vegImage);
+
+        // added to fix image float issue caused by adding the ratings before the images
+        vegRating.addClass("vegClass2");
+
+        // appends the gif to itss rating in the div tag in the html
+        $("#veggieGifs").append(vegRating);
+    }
+    });
+    });
+    
+
+      // This function handles events where the add veggie button is clicked
+      $("#add-veggie").on("click", function(event) {
+        // event.preventDefault() prevents submit button from trying to send a form.
+        event.preventDefault();
+        // Using a submit button instead of a regular button allows the user to hit
+        // "Enter" instead of clicking the button if desired
+
+        // Write code to grab the text the user types into the input field
+        var newVeggie = $("#veggie-input").val();
+        // Write code to add the new veggie into the veggies array
+        veggies.push(newVeggie);
+        // The renderButtons function is called, rendering the list of veggie buttons
+        renderButtons();
+      });
+
+      // Calling the renderButtons function to display the initial list of veggies
+      renderButtons();
+    </script>
+  </div>
+</body>
+
+</html>
