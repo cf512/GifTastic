@@ -1,5 +1,11 @@
 # GifTastic
 
+### Developer's Notes
+
+This was an interesting assignment that combined every different aspect of the coursework thus far, with emphasis on APIs, JSON, and possibly our most complex jQuery to date. The dynamic generation of the gifs, attaching multiple json responses to the html elements, and the logic around clicking to toggle still & animated were some of the more challenging parts. 
+
+### Original Assignments Notes
+
 ### Overview
 
 In this assignment, you'll use the GIPHY API to make a dynamic web page that populates with gifs of your choice. To finish this task, you must call the GIPHY API and use JavaScript and jQuery to 
