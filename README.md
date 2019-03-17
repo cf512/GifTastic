@@ -1,4 +1,4 @@
-#VeggieGifTastic
+# VeggieGifTastic
 
 ### Developer's Notes
 
